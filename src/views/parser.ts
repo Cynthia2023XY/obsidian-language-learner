@@ -34,6 +34,7 @@ export class TextParser {
     }
 
     async countWords(text: string): Promise<[number, number, number]> {
+        text = this.normalizeMarkdownText(text);
         const ast = this.processor.parse(text);
         let wordSet: Set<string> = new Set();
         visit(ast, "WordNode", (word) => {
@@ -55,6 +56,7 @@ export class TextParser {
     }
 
     async text2HTML(text: string) {
+        text = this.normalizeMarkdownText(text);
         this.pIdx = 0;
         this.words.clear();
 
@@ -87,6 +89,7 @@ export class TextParser {
     }
 
     async getWordsPhrases(text: string) {
+        text = this.normalizeMarkdownText(text);
         const ast = this.processor.parse(text);
         let words: Set<string> = new Set();
         visit(ast, "WordNode", (word) => {
@@ -107,6 +110,25 @@ export class TextParser {
 
         let res = await this.plugin.db.getExpressionsSimple(payload);
         return res;
+    }
+
+    /** 将阅读正文中的常见 Markdown 语法转成用户实际看到的纯文本 */
+    normalizeMarkdownText(text: string): string {
+        return text
+            .replace(/!\[([^\]]*)\]\(([^)]*)\)/g, "$1")
+            .replace(/\[\[([^\]]+?)\]\(([^)]*)\)\]\(([^)]*)\)/g, "$1")
+            .replace(/\[([^\]]+)\]\(([^)]*)\)/g, "$1")
+            .replace(/\[\[([^\]|]+)\|([^\]]+)\]\]/g, "$2")
+            .replace(/\[\[([^\]]+)\]\]/g, "$1")
+            .replace(/`([^`]+)`/g, "$1")
+            .replace(/\*\*\*([^*]+)\*\*\*/g, "$1")
+            .replace(/___([^_]+)___/g, "$1")
+            .replace(/\*\*([^*]+)\*\*/g, "$1")
+            .replace(/__([^_]+)__/g, "$1")
+            .replace(/\*([^*]+)\*/g, "$1")
+            .replace(/_([^_]+)_/g, "$1")
+            .replace(/~~([^~]+)~~/g, "$1")
+            .replace(/==([^=]+)==/g, "$1");
     }
 
     // Plugin：在retextEnglish基础上，把AST上一些单词包裹成短语

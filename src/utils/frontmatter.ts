@@ -2,6 +2,9 @@ import { App, TFile, parseYaml, stringifyYaml } from "obsidian";
 
 type FrontMatter = { [K in string]: string };
 
+/** 匹配文件开头第一段 YAML frontmatter，避免误吞正文中的 Markdown 分隔线 */
+const FRONTMATTER_BLOCK_REGEXP = /^\n*---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/;
+
 export class FrontMatterManager {
     app: App;
 
@@ -14,7 +17,7 @@ export class FrontMatterManager {
         let res = {} as FrontMatter;
         let text = await this.app.vault.read(file);
 
-        let match = text.match(/^\n*---\n([\s\S]+)\n---/);
+        let match = text.match(FRONTMATTER_BLOCK_REGEXP);
         if (match) {
             res = parseYaml(match[1]);
         }
@@ -28,12 +31,12 @@ export class FrontMatterManager {
         }
 
         let text = await this.app.vault.read(file);
-        let match = text.match(/^\n*---\n([\s\S]+)\n---/);
+        let match = text.match(FRONTMATTER_BLOCK_REGEXP);
 
         let newText = "";
         let newFront = stringifyYaml(fm);
         if (match) {
-            newText = text.replace(/^\n*---\n([\s\S]+)\n---/, `---\n${newFront}---`);
+            newText = text.replace(FRONTMATTER_BLOCK_REGEXP, `---\n${newFront}---\n`);
         } else {
             newText = `---\n${newFront}---\n\n` + text;
         }
@@ -54,6 +57,6 @@ export class FrontMatterManager {
 
         fm[key] = value;
 
-        this.storeFrontMatter(file, fm);
+        await this.storeFrontMatter(file, fm);
     }
 }
