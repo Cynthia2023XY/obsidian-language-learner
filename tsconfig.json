@@ -29,6 +29,12 @@
     "**/*.ts",
     "**/*.tsx",
     "**/*.vue"
+  ],
+  "exclude": [
+    "src/**/*-test.ts",
+    "src/**/*-test.js",
+    "src/test/**",
+    "vitest.config.mts"
   ]
   // "vueCompilerOptions": {
   //   "target": 3,

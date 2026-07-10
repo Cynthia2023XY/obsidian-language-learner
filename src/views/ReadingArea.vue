@@ -25,7 +25,7 @@
                 </div>
             </div>
             <!-- 阅读区 -->
-            <div class="text-area" style="
+            <div ref="textArea" class="text-area" style="
                     flex: 1;
                     overflow: auto;
                     padding-left: 5%;
@@ -34,7 +34,7 @@
                     fontSize: store.fontSize,
                     fontFamily: store.fontFamily,
                     lineHeight: store.lineHeight,
-                }" v-html="renderedText" />
+                }" />
             <!-- 底栏 -->
             <div class="pagination" style="
                     padding: 10px 0;
@@ -208,7 +208,12 @@ let page = view.lastPos
     ? ref(Math.ceil(view.lastPos / pageSize.value))
     : ref(1);
 
-let renderedText = ref("");
+/** 阅读正文的 Markdown 渲染容器 */
+let textArea = ref<HTMLElement>();
+/** 当前分页范围内需要渲染的 Markdown 正文 */
+let renderedMarkdown = ref("");
+/** 最近一次正文渲染任务的序号，用于避免快速翻页时旧任务覆盖新页面 */
+let renderVersion = 0;
 let psChange = ref(true); // 标志pageSize的改变
 let refreshHandle = ref(true);
 
@@ -232,9 +237,7 @@ watch(
                 ? totalLines
                 : start + pageSize.value;
 
-        renderedText.value = await plugin.parser.parse(
-            article.slice(start, end).join("\n")
-        );
+        renderedMarkdown.value = article.slice(start, end).join("\n");
 
         if (p !== prev_p || pc != prev_pc) {
             plugin.frontManager.setFrontMatter(
@@ -243,6 +246,32 @@ watch(
                 `${(p - 1) * pageSize.value + 1}`
             );
         }
+    },
+    { immediate: true }
+);
+
+watch(
+    [renderedMarkdown, textArea],
+    async ([markdown, container]) => {
+        if (!container) {
+            return;
+        }
+
+        /** 当前渲染任务的序号，用于在异步 Markdown 渲染结束后判断是否仍然有效 */
+        const currentRenderVersion = ++renderVersion;
+        container.empty();
+        await MarkdownRenderer.renderMarkdown(
+            markdown,
+            container,
+            view.file.path,
+            null
+        );
+
+        if (currentRenderVersion !== renderVersion) {
+            return;
+        }
+
+        await plugin.parser.highlightElement(container);
     },
     { immediate: true }
 );

@@ -5,11 +5,11 @@ import { modifyChildren } from "unist-util-modify-children";
 import { visit } from "unist-util-visit";
 import { toString } from "nlcst-to-string";
 
-import { Phrase, Word } from "@/db/interface";
-import Plugin from "@/plugin";
+import type { Phrase, Word } from "@/db/interface";
+import type Plugin from "@/plugin";
 
 const STATUS_MAP = ["ignore", "learning", "familiar", "known", "learned"];
-type AnyNode = Root | Content | Content[];
+type AnyNode = Root | Parent | Content | Content[];
 
 export class TextParser {
     // 记录短语位置
@@ -35,7 +35,7 @@ export class TextParser {
 
     async countWords(text: string): Promise<[number, number, number]> {
         text = this.normalizeMarkdownText(text);
-        const ast = this.processor.parse(text);
+        const ast = this.processor.parse(text) as Root;
         let wordSet: Set<string> = new Set();
         visit(ast, "WordNode", (word) => {
             let text = toString(word).toLowerCase();
@@ -57,6 +57,23 @@ export class TextParser {
 
     async text2HTML(text: string) {
         text = this.normalizeMarkdownText(text);
+        /** 当前待渲染文本对应的自然语言语法树 */
+        const ast = await this.prepareHTMLContext(text);
+
+        let HTML = this.processor.stringify(ast) as any as string;
+        return HTML;
+    }
+
+    /** 把单个 Markdown 文本节点转换为可嵌入标题、链接等结构内部的单词高亮 HTML */
+    async text2InlineHTML(text: string): Promise<string> {
+        /** 当前文本节点对应的自然语言语法树 */
+        const ast = await this.prepareHTMLContext(text);
+
+        return this.toInlineHTMLString(ast);
+    }
+
+    /** 为一段文本准备短语和单词状态上下文，供块级和行内渲染复用 */
+    async prepareHTMLContext(text: string): Promise<Root> {
         this.pIdx = 0;
         this.words.clear();
 
@@ -68,15 +85,16 @@ export class TextParser {
             })
         ).phrases;
 
-        const ast = this.processor.parse(text);
+        /** 当前待渲染文本对应的自然语言语法树 */
+        const ast = this.processor.parse(text) as Root;
 
-        // 获得文章中去重后的单词
+        /** 文章片段中去重后的单词集合 */
         let wordSet: Set<string> = new Set();
         visit(ast, "WordNode", (word) => {
             wordSet.add(toString(word).toLowerCase());
         });
 
-        // 查询这些单词的status
+        /** 已在词库中保存过状态的单词数据 */
         let stored = await this.plugin.db.getStoredWords({
             article: "",
             words: [...wordSet],
@@ -84,8 +102,44 @@ export class TextParser {
 
         stored.words.forEach((w) => this.words.set(w.text, w));
 
-        let HTML = this.processor.stringify(ast) as any as string;
-        return HTML;
+        return ast;
+    }
+
+    /** 在 Obsidian 已渲染出的 Markdown DOM 中只替换文本节点，保留标题、图片等 Markdown 结构 */
+    async highlightElement(element: HTMLElement): Promise<void> {
+        /** 需要进行单词高亮替换的纯文本节点 */
+        const textNodes: Text[] = [];
+        /** 用于遍历 Markdown 渲染结果中所有文本节点的游标 */
+        const walker = element.ownerDocument.createTreeWalker(element, 4);
+        /** 当前遍历到的 DOM 节点 */
+        let currentNode = walker.nextNode();
+
+        while (currentNode) {
+            /** 当前文本节点的父元素，用于判断是否适合替换 */
+            const parentElement = currentNode.parentElement;
+            if (parentElement && this.shouldHighlightTextNode(currentNode as Text, parentElement)) {
+                textNodes.push(currentNode as Text);
+            }
+            currentNode = walker.nextNode();
+        }
+
+        for (const textNode of textNodes) {
+            /** 当前文本节点转成的行内高亮 HTML */
+            const inlineHTML = await this.text2InlineHTML(textNode.textContent || "");
+            /** 用于把高亮 HTML 安全转换成 DOM 片段的模板容器 */
+            const template = element.ownerDocument.createElement("template");
+            template.innerHTML = inlineHTML;
+            textNode.replaceWith(template.content);
+        }
+    }
+
+    /** 判断 Markdown 渲染后的文本节点是否应该参与阅读模式单词高亮 */
+    shouldHighlightTextNode(textNode: Text, parentElement: HTMLElement): boolean {
+        if (!textNode.textContent?.trim()) {
+            return false;
+        }
+
+        return !parentElement.closest("script, style, pre, code, .word, .phrase, .select");
     }
 
     async getWordsPhrases(text: string) {
@@ -253,6 +307,32 @@ export class TextParser {
         if (Array.isArray(node)) {
             let nodes = node as Content[];
             return nodes.map((n) => this.toHTMLString(n)).join("");
+        }
+    }
+
+    /** 输出适合嵌入 Markdown 既有标签内部的行内高亮 HTML，避免在标题内再生成段落标签 */
+    toInlineHTMLString(node: AnyNode): string {
+        if (node.hasOwnProperty("value")) {
+            return (node as Literal).value;
+        }
+        if (node.hasOwnProperty("children")) {
+            /** 当前需要转换为行内 HTML 的父级语法节点 */
+            let n = node as Parent;
+            switch (n.type) {
+                case "WordNode":
+                case "PhraseNode":
+                case "SentenceNode": {
+                    return this.toHTMLString(n);
+                }
+                default: {
+                    return this.toInlineHTMLString(n.children);
+                }
+            }
+        }
+        if (Array.isArray(node)) {
+            /** 当前父节点下待拼接的子节点列表 */
+            let nodes = node as Content[];
+            return nodes.map((n) => this.toInlineHTMLString(n)).join("");
         }
     }
 }
