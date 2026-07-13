@@ -9,6 +9,7 @@ export default {
     "Search word": "查找单词/短语",
     "Refresh Word Database": "刷新单词数据库",
     "Refresh Review Database": "刷新复习数据库",
+    "Sync Article Notes to Words": "同步文章笔记到单词笔记",
 
     // DataPanelView.ts
     "Data Panel": "单词列表",

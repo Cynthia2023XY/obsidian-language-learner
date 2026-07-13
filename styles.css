@@ -1,10 +1,12 @@
 @charset "UTF-8";
 
 /* src/stalin.css */
-.sr-modal-content h4 {
+.sr-modal-content h4,
+.sr-card-container .sr-content h4 {
   cursor: pointer;
 }
-.sr-modal-content h4:hover {
+.sr-modal-content h4:hover,
+.sr-card-container .sr-content h4:hover {
   color: deeppink;
   transition: color 0.3s ease;
 }

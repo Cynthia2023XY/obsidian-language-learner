@@ -9,6 +9,7 @@ export default {
     "Search word": "Search word",
     "Refresh Word Database": "Refresh Word Database",
     "Refresh Review Database": "Refresh Review Database",
+    "Sync Article Notes to Words": "Sync Article Notes to Words",
 
     // DataPanelView.ts
     "Data Panel": "Data Panel",

@@ -289,6 +289,18 @@ async function fail() {
 	failing.value = false;
 }
 
+/** 将文章来源和当前笔记标题组合成例句出处 */
+function formatSentenceOrigin(origin: string, noteTitle: string): string {
+	/** 清理后的文章来源名称 */
+	const normalizedOrigin = origin?.trim() ?? "";
+	/** 清理后的当前笔记标题 */
+	const normalizedNoteTitle = noteTitle?.trim() ?? "";
+	if (!normalizedNoteTitle) {
+		return normalizedOrigin;
+	}
+	return `${normalizedOrigin}\n${normalizedNoteTitle}`;
+}
+
 let submitLoading = ref(false);
 
 async function submit() {
@@ -359,6 +371,8 @@ useEvent(window, "obsidian-langr-search", async (evt: CustomEvent) => {
 	let sentenceText = "";
 	let storedSen: Sentence = null;
 	let defaultOrigin: string = null;
+	/** 当前阅读文章所在笔记的标题 */
+	let noteTitle = "";
 	let filledTrans = null;
 
 	if (target) {
@@ -372,9 +386,14 @@ useEvent(window, "obsidian-langr-search", async (evt: CustomEvent) => {
 		let reading = view.app.workspace.getActiveViewOfType(ReadingView);
 
 		if (reading) {
+			/** 当前阅读文章配置的外部来源名称 */
 			let presetOrigin = view.app.metadataCache.getFileCache(reading.file)
 				.frontmatter["langr-origin"];
-			defaultOrigin = presetOrigin ? presetOrigin : reading.file.name;
+			noteTitle = reading.file.basename;
+			defaultOrigin = formatSentenceOrigin(
+				presetOrigin ? presetOrigin : reading.file.name,
+				noteTitle
+			);
 		}
 
 		if (plugin.settings.use_machine_trans) {
@@ -406,7 +425,10 @@ useEvent(window, "obsidian-langr-search", async (evt: CustomEvent) => {
 					(sen) => sen.text === sentenceText
 				);
 				if (!added) {
-					expr.sentences = expr.sentences.concat(storedSen);
+					expr.sentences = expr.sentences.concat({
+						...storedSen,
+						origin: defaultOrigin || storedSen.origin,
+					});
 				}
 			}
 		}
@@ -434,7 +456,10 @@ useEvent(window, "obsidian-langr-search", async (evt: CustomEvent) => {
 			tags: [],
 			notes: [],
 			sentences: storedSen
-				? [storedSen]
+				? [{
+					...storedSen,
+					origin: defaultOrigin || storedSen.origin,
+				}]
 				: [
 					{
 						text: sentenceText,

@@ -185,6 +185,13 @@ export default class LanguageLearner extends Plugin {
             callback: this.refreshReviewDb,
         });
 
+        // 注册同步当前文章笔记到单词笔记命令
+        this.addCommand({
+            id: "langr-sync-article-notes-to-words",
+            name: t("Sync Article Notes to Words"),
+            callback: this.syncArticleNotesToWords,
+        });
+
         // 注册查词命令
         this.addCommand({
             id: "langr-search-word-select",
@@ -391,6 +398,59 @@ export default class LanguageLearner extends Plugin {
         this.saveSettings();
     };
 
+    /** 将当前阅读文章的笔记同步到文中已收录词条的单词笔记 */
+    syncArticleNotesToWords = async () => {
+        /** 当前激活的阅读模式视图 */
+        let reading = this.app.workspace.getActiveViewOfType(ReadingView);
+        if (!reading) {
+            new Notice("Please open the article in Reading View first");
+            return;
+        }
+
+        /** 当前文章笔记区中的最新全文概览 */
+        let articleNotes = (await reading.readContent("notes", false))?.trim();
+        if (!articleNotes) {
+            new Notice("Current article notes are empty");
+            return;
+        }
+
+        /** 当前阅读文章正文内容 */
+        let articleText = await reading.readContent("article", false);
+        if (!articleText) {
+            new Notice("Current article content is empty");
+            return;
+        }
+
+        /** 当前文章中已经收录到词库的单词和短语 */
+        let articleWords = await this.parser.getWordsPhrases(articleText);
+        if (articleWords.length === 0) {
+            new Notice("No stored words found in current article");
+            return;
+        }
+
+        /** 成功同步文章笔记的词条数量 */
+        let updatedCount = 0;
+        /** 逐个处理当前文章中命中的词库词条 */
+        for (let articleWord of articleWords) {
+            /** 当前需要更新笔记的词条完整信息 */
+            let expression = await this.db.getExpression(articleWord.expression);
+            if (!expression) {
+                continue;
+            }
+
+            expression.notes = [articleNotes];
+            if ((await this.db.postExpression(expression)) === 200) {
+                updatedCount++;
+            }
+        }
+
+        if (this.settings.auto_refresh_db) {
+            await this.refreshReviewDb();
+        }
+
+        new Notice(`Synced article notes to ${updatedCount} words`);
+    };
+
     // 在MardownView的扩展菜单加一个转为Reading模式的选项
     registerReadingToggle = () => {
         const pluginSelf = this;
@@ -552,13 +612,21 @@ export default class LanguageLearner extends Plugin {
     // 管理所有的鼠标左击
     registerLeftClick() {
         this.registerDomEvent(document.body, "click", (evt) => {
+            /** 当前点击的页面元素 */
             let target = evt.target as HTMLElement;
+            /** 是否点击了间隔复习插件中的单词标题 */
+            let isReviewCardTitle = target.tagName === "H4" && (
+                target.matchParent(".sr-modal-content") ||
+                target.matchParent(".sr-card-container .sr-content")
+            );
             if (
-                target.tagName === "H4" &&
-                target.matchParent(".sr-modal-content")
+                isReviewCardTitle
             ) {
+                /** 需要播放发音的复习单词 */
                 let word = target.textContent;
+                /** 复习卡片发音使用的口音配置 */
                 let accent = this.settings.review_prons;
+                /** 有道单词发音音频地址 */
                 let wordUrl =
                     `http://dict.youdao.com/dictvoice?type=${accent}&audio=` +
                     encodeURIComponent(word);
