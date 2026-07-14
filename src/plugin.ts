@@ -192,6 +192,13 @@ export default class LanguageLearner extends Plugin {
             callback: this.syncArticleNotesToWords,
         });
 
+        // 注册从命令面板打开当前文章阅读模式的命令
+        this.addCommand({
+            id: "langr-open-active-reading-view",
+            name: t("Open as Reading View"),
+            callback: this.openActiveMarkdownAsReadingView,
+        });
+
         // 注册查词命令
         this.addCommand({
             id: "langr-search-word-select",
@@ -272,6 +279,25 @@ export default class LanguageLearner extends Plugin {
             //popstate: true,
         } as ViewState);
     }
+
+    /** 将当前活动 Markdown 文件打开为阅读模式，作为标题栏按钮不可见时的命令入口 */
+    openActiveMarkdownAsReadingView = async () => {
+        /** 当前活动的 Markdown 视图，用于定位用户正在阅读的文件 */
+        const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
+        if (!activeView) {
+            new Notice("Please open a Markdown file first");
+            return;
+        }
+
+        /** 当前活动文件的缓存信息，用于判断是否声明为语言学习文章 */
+        const cache = this.app.metadataCache.getFileCache(activeView.file);
+        if (!cache?.frontmatter?.[FRONT_MATTER_KEY]) {
+            new Notice("Current file is not marked as a language learner article");
+            return;
+        }
+
+        await this.setReadingView(activeView.leaf);
+    };
 
     async refreshTextDB() {
         await this.refreshWordDb();

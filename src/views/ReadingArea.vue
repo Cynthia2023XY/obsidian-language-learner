@@ -251,7 +251,7 @@ watch(
 );
 
 watch(
-    [renderedMarkdown, textArea],
+    [renderedMarkdown, textArea, refreshHandle],
     async ([markdown, container]) => {
         if (!container) {
             return;
@@ -280,14 +280,9 @@ watch(
 
 // 添加无视单词
 async function addIgnores() {
-    let ignores = contentEl.querySelectorAll(
-        ".word.new"
-    ) as unknown as HTMLElement[];
-    let ignore_words: Set<string> = new Set();
-    ignores.forEach((el) => {
-        ignore_words.add(el.textContent.toLowerCase());
-    });
-    await plugin.db.postIgnoreWords([...ignore_words]);
+    /** 当前文章中尚未加入词库的新单词 */
+    const ignoreWords = await plugin.parser.getNewWords(article.join("\n"));
+    await plugin.db.postIgnoreWords(ignoreWords);
     // this.setViewData(this.data)
     refreshHandle.value = !refreshHandle.value;
     dispatchEvent(new CustomEvent("obsidian-langr-refresh-stat"));

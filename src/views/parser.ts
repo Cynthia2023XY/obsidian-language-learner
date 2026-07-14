@@ -166,6 +166,32 @@ export class TextParser {
         return res;
     }
 
+    /** 获取阅读正文中尚未写入词库的新单词，用于结束阅读时批量置为无视 */
+    async getNewWords(text: string): Promise<string[]> {
+        text = this.normalizeMarkdownText(text);
+
+        /** 当前文章纯文本对应的自然语言语法树 */
+        const ast = this.processor.parse(text) as Root;
+        /** 当前文章中去重后的有效英文单词集合 */
+        const wordSet: Set<string> = new Set();
+        visit(ast, "WordNode", (word) => {
+            /** 当前语法节点提取出的单词小写文本 */
+            const wordText = toString(word).toLowerCase();
+            if (/[0-9\u4e00-\u9fa5]/.test(wordText)) return;
+            wordSet.add(wordText);
+        });
+
+        /** 当前文章中已经存在于词库的单词集合 */
+        const storedWords = await this.plugin.db.getStoredWords({
+            article: "",
+            words: [...wordSet],
+        });
+        /** 已入库单词文本的快速查询集合 */
+        const storedWordSet = new Set(storedWords.words.map((word) => word.text));
+
+        return [...wordSet].filter((word) => !storedWordSet.has(word));
+    }
+
     /** 将阅读正文中的常见 Markdown 语法转成用户实际看到的纯文本 */
     normalizeMarkdownText(text: string): string {
         return text

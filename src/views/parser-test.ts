@@ -51,3 +51,22 @@ describe("TextParser.highlightElement", () => {
         expect(container.querySelector("h2 p")).toBeNull();
     });
 });
+
+describe("TextParser.getNewWords", () => {
+    it("只返回整篇文章中尚未写入词库的新单词", async () => {
+        /** 提供已入库单词查询结果的解析器实例 */
+        const parser = new TextParser({
+            db: {
+                /** 模拟词库中 already 已经存在，newcomer 仍是新词 */
+                getStoredWords: async () => ({
+                    phrases: [],
+                    words: [{ text: "already", status: 1 }],
+                }),
+            },
+        } as any);
+        /** 包含已入库单词、新单词、数字和中文的文章文本 */
+        const articleText = "Already known. Newcomer arrives in 2026. 中文";
+
+        expect(await parser.getNewWords(articleText)).toEqual(["known", "newcomer", "arrives", "in"]);
+    });
+});
