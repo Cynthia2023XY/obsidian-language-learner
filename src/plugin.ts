@@ -97,6 +97,7 @@ export default class LanguageLearner extends Plugin {
         this.registerContextMenu();
         this.registerLeftClick();
         this.registerMouseup();
+        this.registerReviewCardAutoPronounce();
         this.registerEvent(
             this.app.workspace.on("css-change", () => {
                 store.dark = document.body.hasClass("theme-dark");
@@ -649,16 +650,65 @@ export default class LanguageLearner extends Plugin {
                 isReviewCardTitle
             ) {
                 /** 需要播放发音的复习单词 */
-                let word = target.textContent;
-                /** 复习卡片发音使用的口音配置 */
-                let accent = this.settings.review_prons;
-                /** 有道单词发音音频地址 */
-                let wordUrl =
-                    `http://dict.youdao.com/dictvoice?type=${accent}&audio=` +
-                    encodeURIComponent(word);
-                playAudio(wordUrl);
+                let word = target.textContent?.trim();
+                if (!word) return;
+
+                this.playReviewCardWord(word);
             }
         });
+    }
+
+    /** 注册间隔复习卡片展示时自动播放单词发音 */
+    registerReviewCardAutoPronounce() {
+        /** 间隔复习弹窗和卡片内单词标题的选择器 */
+        const reviewCardTitleSelector = ".sr-modal-content h4, .sr-card-container .sr-content h4";
+        /** 最近一次自动播放的单词，避免弹窗渲染抖动时重复播放 */
+        let lastAutoPronouncedWord = "";
+        /** 最近一次自动播放发生的时间，配合同词去重使用 */
+        let lastAutoPronouncedTime = 0;
+        /** 自动播放当前可见复习卡片单词发音 */
+        const pronounceVisibleReviewCard = () => {
+            /** 当前页面中存在的复习卡片单词标题列表 */
+            const titles = Array.from(document.body.querySelectorAll<HTMLElement>(reviewCardTitleSelector));
+            /** 当前可见的复习卡片单词标题 */
+            const title = titles.find((item) => item.offsetParent !== null);
+            if (!title) return;
+
+            /** 当前复习卡片中的单词文本 */
+            const word = title.textContent?.trim();
+            if (!word) return;
+
+            /** 当前时间戳，用于限制同一单词的短时间重复自动发音 */
+            const now = Date.now();
+            if (word === lastAutoPronouncedWord && now - lastAutoPronouncedTime < 1000) return;
+
+            lastAutoPronouncedWord = word;
+            lastAutoPronouncedTime = now;
+            this.playReviewCardWord(word);
+        };
+        /** 监听闪卡插件弹窗或卡片内容变化的观察器 */
+        const reviewCardObserver = new MutationObserver(() => {
+            pronounceVisibleReviewCard();
+        });
+
+        reviewCardObserver.observe(document.body, {
+            childList: true,
+            subtree: true,
+            characterData: true,
+        });
+        this.register(() => reviewCardObserver.disconnect());
+        pronounceVisibleReviewCard();
+    }
+
+    /** 播放间隔复习卡片中单词的有道发音 */
+    playReviewCardWord(word: string) {
+        /** 复习卡片发音使用的口音配置 */
+        let accent = this.settings.review_prons;
+        /** 有道单词发音音频地址 */
+        let wordUrl =
+            `http://dict.youdao.com/dictvoice?type=${accent}&audio=` +
+            encodeURIComponent(word);
+        playAudio(wordUrl);
     }
 
     async loadSettings() {
