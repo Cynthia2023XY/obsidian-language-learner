@@ -570,7 +570,7 @@ export default class LanguageLearner extends Plugin {
         if (this.settings.auto_pron) {
             let accent = this.settings.review_prons;
             let wordUrl =
-                `http://dict.youdao.com/dictvoice?type=${accent}&audio=` +
+                `https://dict.youdao.com/dictvoice?type=${accent}&audio=` +
                 encodeURIComponent(word);
             playAudio(wordUrl);
         }
@@ -706,7 +706,7 @@ export default class LanguageLearner extends Plugin {
         let accent = this.settings.review_prons;
         /** 有道单词发音音频地址 */
         let wordUrl =
-            `http://dict.youdao.com/dictvoice?type=${accent}&audio=` +
+            `https://dict.youdao.com/dictvoice?type=${accent}&audio=` +
             encodeURIComponent(word);
         playAudio(wordUrl);
     }
