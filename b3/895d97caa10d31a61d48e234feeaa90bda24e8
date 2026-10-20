@@ -1,0 +1,35 @@
+.github/workflows/release.yml
+  s_878b1f3b70e37c::t_3edb8f6fbf35ad 10
+README.md
+  s_878b1f3b70e37c::t_b5fe9ddd6b6695 20
+manifest.json
+  s_878b1f3b70e37c::t_0597bd738d3613 2
+scripts/leaf-panels-smoke.mjs
+  s_878b1f3b70e37c::t_269bf7507f9109 29,61,87,92,100
+scripts/lingualeaf-selection-smoke.mjs
+  s_878b1f3b70e37c::t_d10035d78e6a88 37-38,50
+scripts/lingualeaf-smoke.mjs
+  s_878b1f3b70e37c::t_562b850dc36d71 33,48,60,85,97,112,120,134,141,143,156
+src/lingualeaf/ui.ts
+  s_878b1f3b70e37c::t_68751ea5c6d517 4-7
+src/plugin.ts
+  s_878b1f3b70e37c::t_3617e739470bf8 25-40,43-99,103-117,137,139,216,222
+src/settings.ts
+  s_878b1f3b70e37c::t_fa13fefacdbfeb 20-21,23,37-42,47,55,61
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "b3895d97caa10d31a61d48e234feeaa90bda24e8",
+  "prompts": {},
+  "sessions": {
+    "s_878b1f3b70e37c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a15807-15c3-7f71-89e5-e97e9817a855",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "dingxinyi.2 <dingxinyi.2@jd.com>"
+    }
+  }
+}
