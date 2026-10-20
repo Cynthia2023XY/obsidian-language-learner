@@ -1,0 +1,51 @@
+src/lingualeaf/selection.ts
+  s_60eb0b3b0cabff::t_6f2dab0e709c68 17-42
+src/lingualeaf/translation.ts
+  s_60eb0b3b0cabff::t_96c06b1ea4400d 1-25
+src/lingualeaf/quick-save.ts
+  s_60eb0b3b0cabff::t_2aef541ff6d646 1-24
+docs/lingualeaf/bilingual-fixes-smoke.json
+  s_60eb0b3b0cabff::t_6c24b09ac844ea 1-19
+docs/lingualeaf/使用与开发说明.md
+  s_60eb0b3b0cabff::t_1ca2c885d366cb 14,21,38,48-63,88-89
+src/lingualeaf/article.ts
+  s_60eb0b3b0cabff::t_102e3ea235496a 3,15,45,55,180,187
+src/lingualeaf/core-test.ts
+  s_60eb0b3b0cabff::t_020b8b9c37502c 30-39,90-98
+src/lingualeaf/host.ts
+  s_60eb0b3b0cabff::t_9ed1706f33b0f6 99-100,302
+src/lingualeaf/panel-theme.ts
+  s_60eb0b3b0cabff::t_59b22af61222a5 29
+src/lingualeaf/panels.css
+  s_60eb0b3b0cabff::t_6a89defe91b607 64-69
+src/lingualeaf/quick-save-test.ts
+  s_60eb0b3b0cabff::t_d163b243438f32 1-50
+src/lingualeaf/runtime.ts
+  s_60eb0b3b0cabff::t_58aae7b49c55a0 12,49,145,157-159,239
+src/lingualeaf/selection-test.ts
+  s_60eb0b3b0cabff::t_e0c889930446ac 105-130
+src/lingualeaf/translation-test.ts
+  s_60eb0b3b0cabff::t_878057693df926 1-17
+src/plugin.ts
+  s_60eb0b3b0cabff::t_6efe7c346aa92b 20-21,75,124-125,133-159
+src/views/LearnPanel.vue
+  s_60eb0b3b0cabff::t_dff858766e8586 2,8,18,29,48-49,85-87,105,113,117
+styles.css
+  s_60eb0b3b0cabff::t_0b65ddaeac8785 654-656,660-674
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "7b6a3269a02a19508999d8bc09f6393784a337d2",
+  "prompts": {},
+  "sessions": {
+    "s_60eb0b3b0cabff": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a15923-57b9-73e1-a812-25f6a3915bcf",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "dingxinyi.2 <dingxinyi.2@jd.com>"
+    }
+  }
+}
