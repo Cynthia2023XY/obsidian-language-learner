@@ -1,0 +1,104 @@
+package.json
+  s_8105a173bcaab4::t_010199493589e5 2-4,15
+src/views/LearnPanel.vue
+  s_8105a173bcaab4::t_4e2d2a9d0e610a 5-6,85-88,93,125-131,137-181,183-198,200-212,214-217,224-227
+  s_8105a173bcaab4::t_8328ee31ef68ce 228
+src/plugin.ts
+  s_8105a173bcaab4::t_4e2d2a9d0e610a 1-2,6-10,12,14-32,34-39,41-44,46-47,50-66,68-97,99,101-103,105-107,109-110,112,114-118,120,124,126,130-139,141,149-155,161,163
+README.md
+  s_8105a173bcaab4::t_010199493589e5 1,3,5,7,9-12,14,16,18,20-22,24
+manifest.json
+  s_8105a173bcaab4::t_010199493589e5 2-9
+LICENSE
+  s_8105a173bcaab4::t_010199493589e5 4,22
+.gitignore
+  s_8105a173bcaab4::t_003af894b77439 28-30
+.npmrc
+  s_8105a173bcaab4::t_7cad033b5c841f 1-3
+docs/lingualeaf/runtime-smoke.json
+  s_8105a173bcaab4::t_413724ef6b9571 1-53
+docs/lingualeaf/selection-smoke.json
+  s_8105a173bcaab4::t_9f21d93854c00b 1-12
+docs/lingualeaf/使用与开发说明.md
+  s_8105a173bcaab4::t_dba14b7aa86840 1-67
+package-lock.json
+  s_8105a173bcaab4::t_1e9494d1a8cee4 2-3,8-9
+scripts/lingualeaf-selection-smoke.mjs
+  s_8105a173bcaab4::t_b730eeb92a1faf 1-23,25,27,29-80
+scripts/lingualeaf-smoke.mjs
+  s_8105a173bcaab4::t_f2c21aa1502509 1-165
+src/constant.ts
+  s_8105a173bcaab4::t_af4fb8ca13d80d 1-8
+src/dictionary/deepl/View.vue
+  s_8105a173bcaab4::t_8e867e7712a167 32
+src/dictionary/hjdict/View.vue
+  s_8105a173bcaab4::t_2e8f211a45df3f 23
+src/lingualeaf/article.ts
+  s_8105a173bcaab4::t_b1d0b0e04f9002 1-190
+src/lingualeaf/bilingual-reading.css
+  s_8105a173bcaab4::t_e5318d6093f7ff 1-60
+src/lingualeaf/config-test.ts
+  s_8105a173bcaab4::t_3572394efb92c6 2-9,11-32
+src/lingualeaf/config.ts
+  s_8105a173bcaab4::t_9c9bb64cceaef9 1-37
+src/lingualeaf/core-test.ts
+  s_8105a173bcaab4::t_c358d48d260c9e 1-134
+src/lingualeaf/domain.ts
+  s_8105a173bcaab4::t_e5f302c98ce33f 1-70
+src/lingualeaf/host-test.ts
+  s_8105a173bcaab4::t_4e9ececa2f1268 1-113
+src/lingualeaf/host.ts
+  s_8105a173bcaab4::t_ccf92888154fca 1-19,21-40,42-48,50-58,60-64,66-68,70-109,111-128,130-137,139,141-156,158-159,161-172,174-224,227-236,238,240-252,254-261,264-271,273-278,280-291
+src/lingualeaf/panel-model-test.ts
+  s_8105a173bcaab4::t_6ea0696ab1ccee 2-19,21-34,36-42,44-51
+src/lingualeaf/panel-model.ts
+  s_8105a173bcaab4::t_ee91717aae51d9 1,3-5,7,9,12-14,16,18,20,22,24,26,30-31,33-38,41-51
+src/lingualeaf/runtime.ts
+  s_8105a173bcaab4::t_8f4648c56020e5 1-29,31-42,44-61,64-101,103-106,108-110,112-196,199-215,217-233
+src/lingualeaf/selection-test.ts
+  s_8105a173bcaab4::t_ef9fe52b89ddc4 1-104
+src/lingualeaf/selection.ts
+  s_8105a173bcaab4::t_07440f35d46b8f 1-54
+src/lingualeaf/storage.ts
+  s_8105a173bcaab4::t_18f299319b47d5 1-35,37,39-41,43-54
+src/lingualeaf/ui.ts
+  s_8105a173bcaab4::t_d65f4c77d7a300 1-14
+src/main.css
+  s_8105a173bcaab4::t_85082515d2ee81 2-5
+src/settings.ts
+  s_8105a173bcaab4::t_4bf10785cefcea 1-4,6,8-28,30-42
+src/store.ts
+  s_8105a173bcaab4::t_414179c4decddf 3-5
+src/views/DataPanel.vue
+  s_8105a173bcaab4::t_d02d0cd00f1a3c 29-32,38-39,52,77-80,99,101-131,158-159,172-180,242-274,336-374
+src/views/DataPanelView.ts
+  s_8105a173bcaab4::t_3ed91359190a97 39-40
+src/views/LearnPanelView.ts
+  s_8105a173bcaab4::t_ff20ab089ad857 39-40
+src/views/SearchPanel.vue
+  s_8105a173bcaab4::t_dfe22fa0bcbb0c 109-112,114
+src/views/SearchPanelView.ts
+  s_8105a173bcaab4::t_41d9f5faf831f0 39-40
+styles.css
+  s_8105a173bcaab4::t_189a1b8f61ff1e 450-452,499-514,517-518,520-521,523-525,527-539,542-544,546-547,549-550,552-554,556-557,559-564,566-570,574-578
+tsconfig.json
+  s_8105a173bcaab4::t_c22620880ff154 22
+versions.json
+  s_8105a173bcaab4::t_cce0a56eb4a6d3 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "41226b14f5315b410409d2012ed479eaaed1b5f9",
+  "prompts": {},
+  "sessions": {
+    "s_8105a173bcaab4": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a152e9-c097-7aa0-9ed8-e08a13a81bb7",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "dingxinyi.2 <dingxinyi.2@jd.com>"
+    }
+  }
+}
