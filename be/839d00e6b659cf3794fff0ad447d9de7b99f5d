@@ -1,0 +1,70 @@
+docs/lingualeaf/使用与开发说明.md
+  s_926129b39ef641::t_7a8c53740ae7f5 30,68-69
+  s_926129b39ef641::t_9ef3ea113984f5 20,70-73
+docs/lingualeaf/panel-ui-smoke.json
+  s_926129b39ef641::t_08f246d645e29e 1-47
+scripts/leaf-panels-smoke.mjs
+  s_926129b39ef641::t_686ddc77930156 1-105
+scripts/lingualeaf-smoke.mjs
+  s_926129b39ef641::t_5380b342c9818b 53,98,113
+src/component/PanelIcon.vue
+  s_926129b39ef641::t_17a3b123eb8251 1-13
+src/constant.ts
+  s_926129b39ef641::t_bfcd04a0614f99 8
+src/dictionary/youdao/View.vue
+  s_926129b39ef641::t_6ef6414d82a9e0 11-13
+src/lingualeaf/article.ts
+  s_926129b39ef641::t_ac02dafbde2dbd 75,80,84
+src/lingualeaf/capture-count.ts
+  s_926129b39ef641::t_6aefc401c71b47 1-26
+src/lingualeaf/host-test.ts
+  s_926129b39ef641::t_43a698308cd52c 113-159
+src/lingualeaf/host.ts
+  s_926129b39ef641::t_d2d33bf313d466 6,31-32,153,155,162-167,196,207-212
+src/lingualeaf/panel-model-test.ts
+  s_926129b39ef641::t_df287af1e97a5e 8,11-17
+src/lingualeaf/panel-model.ts
+  s_926129b39ef641::t_34959882509319 31,44
+src/lingualeaf/panel-theme.ts
+  s_926129b39ef641::t_d3c707996a104b 1-31
+src/lingualeaf/panels.css
+  s_926129b39ef641::t_01fc9681fee654 1-97
+src/lingualeaf/runtime.ts
+  s_926129b39ef641::t_a6b0eb52a13e36 27-30,184,188-190,192,211,233-235,237
+src/lingualeaf/settings-writer-test.ts
+  s_926129b39ef641::t_e37769ddeb71cc 1-53
+src/lingualeaf/settings-writer.ts
+  s_926129b39ef641::t_5155c2d31eb2fa 1-34
+src/lingualeaf/storage.ts
+  s_926129b39ef641::t_f4e91f5da6d2df 16-19,47-48,58-62
+src/main.css
+  s_926129b39ef641::t_23d5b917fafd26 4
+src/settings.ts
+  s_926129b39ef641::t_03034ebb9f6820 5-6,12-28,33-34,36-41,46,49-60
+src/views/DataPanel.vue
+  s_926129b39ef641::t_71c94265da0e60 2,4-9,11-12,18-28,30,32,34,36-38,40,42,45-55,57-81,85,88-89,91,93,96,100-114,116,118-143,145-148
+src/views/DictItem.vue
+  s_926129b39ef641::t_cfb2fd5c14309c 2-5,8-15
+src/views/LearnPanel.vue
+  s_926129b39ef641::t_50277182580c8d 2-32,38-39,47-48,57,62-63,68-69,84-86,101,103,116,122
+src/views/SearchPanel.vue
+  s_926129b39ef641::t_ece383c9371b59 2,4-17,25,27-28,34,37-38,118-119,123-127
+styles.css
+  s_926129b39ef641::t_0ccd95cb9f9d27 332-452,455-456,458-460,462-464,466-468,470-474,476-481,483-485,487-495,497-498,500-501,503-504,506-507,509-511,513-516,518-519,521-522,524-525,527-528,530-534,536-538,540-541,543-544,546-548,550-551,553-554,556-558,560-561,563-566,568-569,571-574,576-577,579-583,585-589,591-592,594-597,599,601-602,604-607,609-633,636-676,679-681,683-716,718-764,766-798,800-802,804-808
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "be839d00e6b659cf3794fff0ad447d9de7b99f5d",
+  "prompts": {},
+  "sessions": {
+    "s_926129b39ef641": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a15728-8db5-7a61-b192-94d59386acd2",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "dingxinyi.2 <dingxinyi.2@jd.com>"
+    }
+  }
+}
